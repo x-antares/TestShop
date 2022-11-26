@@ -18,7 +18,6 @@ class CreateOrdersTable extends Migration
             $table->string('first_name');
             $table->string('city');
             $table->string('phone');
-            $table->longText('data');
             $table->timestamps();
         });
     }

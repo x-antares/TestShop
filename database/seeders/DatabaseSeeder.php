@@ -22,11 +22,31 @@ class DatabaseSeeder extends Seeder
         $categories = Category::all();
 
         Product::all()->each(function ($product) use ($categories) {
-            $product->categories()->attach(
+            $product->categories()->sync(
                 $categories->random(rand(1, 3))->pluck('id')->toArray()
             );
         });
 
         Order::factory(300)->create();
+
+        Order::take(50)->chunkById(20, function ($chunk) {
+            $products = Product::inRandomOrder()->take($chunk->count())->get();
+
+            foreach ($chunk as $order) {
+                $orderProducts = [];
+
+
+                foreach ($products as $product) {
+                    $orderProducts[] = [
+                        'product_id' => $product->id,
+                        'name' => $product->name,
+                        'price' => $product->price,
+                        'quantity' => rand(1, 9),
+                    ];
+                }
+
+                $order->orderProducts()->createMany($orderProducts);
+            }
+        });
     }
 }

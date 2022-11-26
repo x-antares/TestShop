@@ -9,14 +9,14 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'data' => 'array'
-    ];
-
     protected $fillable = [
         'first_name',
         'city',
-        'phone',
-        'data'
+        'phone'
     ];
+
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class);
+    }
 }
